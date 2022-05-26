@@ -199,8 +199,8 @@ bindsym F1 exec ~/.config/i3/scripts/keyhint-2
 # bindsym $mod+F1 exec xed ~/.config/i3/keybindings
 
 # Backlight control
-bindsym XF86MonBrightnessUp exec brightnessctl -c backlight set +2% && notify-send "$(brightnessctl | grep Current)%"
-bindsym XF86MonBrightnessDown exec exec brightnessctl -c backlight set 2%- && notify-send "$(brightnessctl | grep Current)%"
+bindsym XF86MonBrightnessUp exec brightnessctl -c backlight set +5% && notify-send "$(brightnessctl | grep Current)%"
+bindsym XF86MonBrightnessDown exec exec brightnessctl -c backlight set 5%- && notify-send "$(brightnessctl | grep Current)%"
 
 # change focus
 bindsym $mod+j focus left
@@ -244,7 +244,7 @@ bindsym $mod+e layout toggle split
 bindsym $mod+Shift+space floating toggle
 
 # change focus between tiling / floating windows
-bindsym $mod+space focus mode_toggle
+#bindsym $mod+space focus mode_toggle
 
 # focus the parent container
 bindsym $mod+a focus parent
@@ -417,7 +417,7 @@ exec --no-startup-id dbus-launch dunst --config ~/.config/dunst/dunstrc
 
 # start blueberry app for managing bluetooth devices from tray:
 exec --no-startup-id blueberry-tray
-exec --no-startup-id "~/.config/i3/tray.sh"
+exec --no-startup-id sleep 2 && /home/nathana/.config/i3/scripts/./tray.sh
 # networkmanager-applet
 #exec --no-startup-id nm-applet
 
@@ -544,7 +544,7 @@ bar {
 
 ## rofi bindings fancy application menu ($mod+d /F9 optional disabled)
 
-bindsym $mod+d exec rofi -modi drun -show drun \
+bindsym $mod+space exec rofi -modi drun -show drun \
 		-config ~/.config/rofi/rofidmenu.rasi -dpi 1
 
 #bindsym F9 exec rofi -modi drun -show drun \
