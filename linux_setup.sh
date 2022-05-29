@@ -8,15 +8,17 @@ install_arch() {
 
     echo '**Waiting for bluetooth service to start...'
     sleep 2
-    blueman &
+    blueman-applet &
     # TODO add input for installing additional work packages 
     # install work deps
     # sudo pacman -S postgres ruby-pg cmake dbeaver nvm jdk-openjdk
 
     # Setup oh-my-zsh
     sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+}
 
-    echo "**ZSH installed sucessfully! Waiting to add addons..."
+arch_pt_2() {
+    echo "**ZSH installed sucessfully! Now for zsh addons..."
     sleep 1
     # Add auto complete and syntax highlighting
     git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
@@ -47,7 +49,9 @@ read -p 'Are you running an Arch-based system?' RESP
 if [ $RESP = "y" ] || [ $RESP = "Y" ]
 then
     echo "Good choice! Let's get some important things set up..."
-    install_arch
+    # install_arch
+    # TODO fix this two parter...
+    arch_pt_2
 
     # $? contains the return status of the most recent command or function
     if [ $? = 0 ]
@@ -83,3 +87,7 @@ then
 else
     echo "Unrecognized response, looking for 'y' or 'n'"
 fi
+
+
+# TODO add git config name, email
+# TODO add ssh-keygen
