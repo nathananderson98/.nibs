@@ -8,15 +8,17 @@ install_arch() {
 
     echo '**Waiting for bluetooth service to start...'
     sleep 2
-    blueman &
+    blueman-applet &
     # TODO add input for installing additional work packages 
     # install work deps
     # sudo pacman -S postgres ruby-pg cmake dbeaver nvm jdk-openjdk
 
     # Setup oh-my-zsh
     sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+}
 
-    echo "**ZSH installed sucessfully! Waiting to add addons..."
+arch_pt_2() {
+    echo "**ZSH installed sucessfully! Now for zsh addons..."
     sleep 1
     # Add auto complete and syntax highlighting
     git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
@@ -47,7 +49,9 @@ read -p 'Are you running an Arch-based system?' RESP
 if [ $RESP = "y" ] || [ $RESP = "Y" ]
 then
     echo "Good choice! Let's get some important things set up..."
-    install_arch
+    # install_arch
+    # TODO fix this two parter...
+    arch_pt_2
 
     # $? contains the return status of the most recent command or function
     if [ $? = 0 ]
@@ -85,29 +89,31 @@ else
 fi
 
 
-: 1653058313:0;sudo pacman -S code
-: 1653067774:0;sudo pacman -S docker
-: 1653068118:0;sudo pacman -S docker-compose
-: 1653068934:0;sudo pacman -S htop
-: 1653070942:0;sudo pacman -S haproxy
-: 1653072129:0;sudo pacman -S kate
-: 1653072681:0;sudo pacman -S jdk-openjdk
-: 1653073626:0;sudo pacman -S nvm
-: 1653074409:0;sudo pacman -S ruby-pg
-: 1653075151:0;sudo pacman -S cmake
-: 1653326595:0;sudo pacman -S dbeaver
-: 1653344029:0;sudo pacman -S neofetch
-: 1653344572:0;sudo pacman -S ranger
-: 1653404953:0;sudo pacman -S brightnessctl
-: 1653492533:0;sudo pacman -S blueman
-: 1653588848:0;sudo pacman -S sops
-: 1653589118:0;sudo pacman -S gvm
-: 1654708397:0;sudo pacman -S steam
-: 1653058687:0;yay -S slack-desktop spotify
-: 1653063040:0;yay -S optimus-manager
-: 1653063071:0;yay -S optimus-manager-qt
-: 1653068508:0;yay -S rbenv
-: 1653073730:0;yay -S nvm
-: 1653519256:0;yay -S android-studio
-: 1653589163:0;yay -S gvm
-: 1653592444:0;yay -S terraform13
+# : 1653058313:0;sudo pacman -S code
+# : 1653067774:0;sudo pacman -S docker
+# : 1653068118:0;sudo pacman -S docker-compose
+# : 1653068934:0;sudo pacman -S htop
+# : 1653070942:0;sudo pacman -S haproxy
+# : 1653072129:0;sudo pacman -S kate
+# : 1653072681:0;sudo pacman -S jdk-openjdk
+# : 1653073626:0;sudo pacman -S nvm
+# : 1653074409:0;sudo pacman -S ruby-pg
+# : 1653075151:0;sudo pacman -S cmake
+# : 1653326595:0;sudo pacman -S dbeaver
+# : 1653344029:0;sudo pacman -S neofetch
+# : 1653344572:0;sudo pacman -S ranger
+# : 1653404953:0;sudo pacman -S brightnessctl
+# : 1653492533:0;sudo pacman -S blueman
+# : 1653588848:0;sudo pacman -S sops
+# : 1653589118:0;sudo pacman -S gvm
+# : 1654708397:0;sudo pacman -S steam
+# : 1653058687:0;yay -S slack-desktop spotify
+# : 1653063040:0;yay -S optimus-manager
+# : 1653063071:0;yay -S optimus-manager-qt
+# : 1653068508:0;yay -S rbenv
+# : 1653073730:0;yay -S nvm
+# : 1653519256:0;yay -S android-studio
+# : 1653589163:0;yay -S gvm
+# : 1653592444:0;yay -S terraform13
+# TODO add git config name, email
+# TODO add ssh-keygen
