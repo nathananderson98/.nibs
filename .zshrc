@@ -101,8 +101,6 @@ alias zshedit="kate ~/.zshrc"
 # high dpi settings for gdk apps
 # export GDK_SCALE=2  # this is an integer, 1 or 2 etc
 # export GDK_DPI_SCALE=0.5  # start from this, use other decimal, 0.8 1.0 etc
-# export GDK_SCALE=2
-# export GDK_DPI_SCALE=0.5
 
 # This loads nvm
 # export NVM_DIR="$HOME/.nvm"

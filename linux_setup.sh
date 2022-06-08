@@ -83,3 +83,31 @@ then
 else
     echo "Unrecognized response, looking for 'y' or 'n'"
 fi
+
+
+: 1653058313:0;sudo pacman -S code
+: 1653067774:0;sudo pacman -S docker
+: 1653068118:0;sudo pacman -S docker-compose
+: 1653068934:0;sudo pacman -S htop
+: 1653070942:0;sudo pacman -S haproxy
+: 1653072129:0;sudo pacman -S kate
+: 1653072681:0;sudo pacman -S jdk-openjdk
+: 1653073626:0;sudo pacman -S nvm
+: 1653074409:0;sudo pacman -S ruby-pg
+: 1653075151:0;sudo pacman -S cmake
+: 1653326595:0;sudo pacman -S dbeaver
+: 1653344029:0;sudo pacman -S neofetch
+: 1653344572:0;sudo pacman -S ranger
+: 1653404953:0;sudo pacman -S brightnessctl
+: 1653492533:0;sudo pacman -S blueman
+: 1653588848:0;sudo pacman -S sops
+: 1653589118:0;sudo pacman -S gvm
+: 1654708397:0;sudo pacman -S steam
+: 1653058687:0;yay -S slack-desktop spotify
+: 1653063040:0;yay -S optimus-manager
+: 1653063071:0;yay -S optimus-manager-qt
+: 1653068508:0;yay -S rbenv
+: 1653073730:0;yay -S nvm
+: 1653519256:0;yay -S android-studio
+: 1653589163:0;yay -S gvm
+: 1653592444:0;yay -S terraform13
