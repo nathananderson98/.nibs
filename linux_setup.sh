@@ -1,36 +1,97 @@
 #!/bin/bash
 SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )";
 
-install_arch() {
-    sudo pacman -S zsh htop steam neofetch brightnessctl blueman code
+export RUNZSH="no"
 
+handle_input() {
+    if [ $RESP = "y" ] || [ $RESP = "Y" ]
+    then
+        $1
+
+        # $? contains the return status of the most recent command or function
+        if [ $? = 0 ]
+        then
+            echo "Success!!"
+        else 
+            echo "Something went awry, sorry about that..."
+            return 1
+        fi
+    elif [ $RESP = "n" ] || [ $RESP = "N" ]
+    then
+        echo "Skipping step..."
+    else
+        echo "Unrecognized response, looking for 'y' or 'n'"
+    fi
+}
+
+install_arch_deps() {
+    sudo pacman -S zsh htop steam neofetch brightnessctl blueman code steam kate python-pip libreoffice-still gimp
+
+    # Installing xwinwrap for background, timeshift for backups
+    yay -S xwinwrap-git timeshift
+
+    # echo '**Installing optimus manager...'
+    # install optimus-mananger and opitmus-qt for system tray icon
+    # https://discovery.endeavouros.com/nvidia/optimus-manager-for-nvidia/2021/03/
+    #yay -S optimus-manager optimus-manager-qt
+
+    #echo '**Copying over prime-run executable to /usr/local/bin...'
+    #sudo cp $SCRIPT_DIR/prime-run /usr/local/bin
+
+    echo '**Setting up bluetooth applet / service...'
     sudo systemctl enable bluetooth
 
     echo '**Waiting for bluetooth service to start...'
     sleep 2
     blueman-applet &
-    # TODO add input for installing additional work packages 
-    # install work deps
-    # sudo pacman -S postgres ruby-pg cmake dbeaver nvm jdk-openjdk
-
-    # Setup oh-my-zsh
-    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    return 0
 }
 
-arch_pt_2() {
+install_work_arch_deps() {
+    sudo pacman -S docker docker-compose cmake dbeaver jdk-openjdk sops jupyter-notebook postgresql-libs terraform
+
+    yay -S slack-desktop gvm nvm rbenv ruby-build
+
+    echo "Installing awscli into home directory"
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "$HOME/awscliv2.zip"
+    unzip $HOME/awscliv2.zip
+    sudo $HOME/aws/install
+    aws --version
+
+    echo "Adding user to the docker group"
+    sudo usermod -aG docker nathana # TODO switch to UID variable
+
+    sudo systemctl enable docker
+    sudo systemctl start docker
+
+    # install latest node version and set default
+    # TODO this needs to be added after switching over to zsh, requires sourcing scripts
+    #nvm install --lts
+
+    # install ruby version # TODO add ask for which version of ruby to install
+    rbenv install 3.0.3
+    rbenv global 3.0.3
+    # nvm alias default 16
+
+    # TODO install go version
+    gvm install go1.4 -B
+    gvm use go1.4
+    gvm install go1.16
+    gvm use go1.16
+
+    return 0
+}
+
+install_zsh() {
+    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
     echo "**ZSH installed sucessfully! Now for zsh addons..."
     sleep 1
     # Add auto complete and syntax highlighting
     git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
-    # install optimus-mananger and opitmus-qt for system tray icon
-    # https://discovery.endeavouros.com/nvidia/optimus-manager-for-nvidia/2021/03/
-    echo '**Installing optimus manager...'
-    yay -S optimus-manager optimus-manager-qt
-
-    echo '**Copying over prime-run executable to /usr/local/bin...'
-    cp $SCRIPT_DIR/prime-run /usr/local/bin
+    # TODO copy over .zshrc
 
     return 0
 }
@@ -39,81 +100,42 @@ clone_i3() {
     echo "Copying config..."
     cp $SCRIPT_DIR/i3/config $HOME/.config/i3/config
     echo "Copying scripts..."
-    cp $SCRIPT_DIR/i3/scripts/tray.sh $HOME/.config/i3/scripts/
-    cp $SCRIPT_DIR/configs/monitor.sh $HOME/.screenlayout
+    cp $SCRIPT_DIR/i3/scripts/bg.sh $HOME/.config/i3/scripts/
+    echo "Copying backgrounds..."
+    cp -r $SCRIPT_DIR/i3/backgrounds $HOME/.config/i3/
+    #cp $SCRIPT_DIR/configs/monitor.sh $HOME/.screenlayout
 }
 
-echo "Welcome to Nate's auto-installer  of important things (WIP) for GNU/Linux systems"
-read -p 'Are you running an Arch-based system?' RESP
+echo "Welcome to Nate's auto-installer  of important things (WIP) for GNU/Linux systems running arch"
 
-if [ $RESP = "y" ] || [ $RESP = "Y" ]
-then
-    echo "Good choice! Let's get some important things set up..."
-    # install_arch
-    # TODO fix this two parter...
-    arch_pt_2
+read -p 'Would you like to get some initial packages installed?' RESP
 
-    # $? contains the return status of the most recent command or function
-    if [ $? = 0 ]
-    then
-        echo "Success!! Your system should have some of the goods it needs now."
-    else 
-        echo "Something went awry, sorry about that..."
-        return 1
-    fi
-elif [ $RESP = "n" ] || [ $RESP = "N" ]
-then
-    echo "Fool, run arch, btw..."
-else
-    echo "Unrecognized response, looking for 'y' or 'n'"
-fi
+handle_input "install_arch_deps"
 
-## Setup i3 config and scripts
-read -p 'Are you running i3-wm and would like to clone the config?' RESP
-if [ $RESP = "y" ] || [ $RESP = "Y" ]
-then
-    clone_i3
-    # $? contains the return status of the most recent command or function
-    if [ $? = 0 ]
-    then
-        echo "Success!! Your system accepted the i3 configs."
-    else 
-        echo "Something went awry, sorry about that..."
-        return 1
-    fi
-elif [ $RESP = "n" ] || [ $RESP = "N" ]
-then
-    echo "Too bad, i3 is nice..."
-else
-    echo "Unrecognized response, looking for 'y' or 'n'"
-fi
+read -p 'Would you like to install zsh and copy over the config?' RESP
+
+handle_input "install_zsh"
+
+read -p 'Would you like to install additional "work" related packages?' RESP
+
+handle_input "install_work_arch_deps"
+
+read -p 'Would you like to copy over i3 configs? This is only applicable when running i3-gaps as your wm.' RESP
+
+handle_input "clone_i3"
+
+git config pull.rebase false
+
+echo "Complete!"
+
+echo "You should definitely restart your pc right now..."
 
 
-# : 1653058313:0;sudo pacman -S code
-# : 1653067774:0;sudo pacman -S docker
-# : 1653068118:0;sudo pacman -S docker-compose
-# : 1653068934:0;sudo pacman -S htop
-# : 1653070942:0;sudo pacman -S haproxy
-# : 1653072129:0;sudo pacman -S kate
-# : 1653072681:0;sudo pacman -S jdk-openjdk
-# : 1653073626:0;sudo pacman -S nvm
-# : 1653074409:0;sudo pacman -S ruby-pg
-# : 1653075151:0;sudo pacman -S cmake
-# : 1653326595:0;sudo pacman -S dbeaver
-# : 1653344029:0;sudo pacman -S neofetch
-# : 1653344572:0;sudo pacman -S ranger
-# : 1653404953:0;sudo pacman -S brightnessctl
-# : 1653492533:0;sudo pacman -S blueman
-# : 1653588848:0;sudo pacman -S sops
-# : 1653589118:0;sudo pacman -S gvm
-# : 1654708397:0;sudo pacman -S steam
-# : 1653058687:0;yay -S slack-desktop spotify
-# : 1653063040:0;yay -S optimus-manager
-# : 1653063071:0;yay -S optimus-manager-qt
-# : 1653068508:0;yay -S rbenv
-# : 1653073730:0;yay -S nvm
-# : 1653519256:0;yay -S android-studio
-# : 1653589163:0;yay -S gvm
-# : 1653592444:0;yay -S terraform13
-# TODO add git config name, email
-# TODO add ssh-keygen
+# TODO add natural scrolling to libinput
+# install gtk theme
+# install clear font
+# copy over picom.conf
+# add touchegg for swipe gestures
+# add picom.conf file copy to $HOME/.config/
+# git config --global user.email "nathananderson98@gmail.com"
+# git config --global user.name "Nathan Anderson"

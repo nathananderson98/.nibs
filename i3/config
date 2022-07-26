@@ -48,14 +48,14 @@ workspace_layout default
 ##############################
 
 #border indicator on windows:
-new_window pixel 2
+new_window pixel 1
 
 # thin borders
-# hide_edge_borders both
+#hide_edge_borders both
 
 # Set inner/outer gaps
-gaps inner 3
-gaps outer 3
+gaps inner 30
+gaps outer 0
 
 # show window title bars (not officially supported with i3gaps)
 #default_border normal
@@ -149,12 +149,7 @@ mode "resize" {
 # Pressing right will grow the window's width.
 # Pressing up will shrink the window's height.
 # Pressing down will grow the window's height.
-#        bindsym j resize shrink width 10 px or 10 ppt
-#        bindsym k resize grow height 10 px or 10 ppt
-#        bindsym l resize shrink height 10 px or 10 ppt
-#        bindsym ntilde resize grow width 10 px or 10 ppt
 
-# same bindings, but for the arrow keys
 	bindsym Left resize shrink width 5 px or 5 ppt
 	bindsym Down resize grow height 5 px or 5 ppt
 	bindsym Up resize shrink height 5 px or 5 ppt
@@ -184,7 +179,7 @@ bindsym $mod+Shift+e exec ~/.config/i3/scripts/powermenu
 # lock with a picture:
 #bindsym $mod+l exec i3lock -i  ~/.config/i3/i3-lock-screen.png -p default|win -t
 # lock by blurring the screen:
-bindsym $mod+Escape exec ~/.config/i3/scripts/blur-lock
+#bindsym $mod+Escape exec ~/.config/i3/scripts/blur-lock
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -199,14 +194,14 @@ bindsym F1 exec ~/.config/i3/scripts/keyhint-2
 # bindsym $mod+F1 exec xed ~/.config/i3/keybindings
 
 # Backlight control
-bindsym XF86MonBrightnessUp exec brightnessctl -c backlight set +5% && notify-send "$(brightnessctl | grep Current)%"
-bindsym XF86MonBrightnessDown exec exec brightnessctl -c backlight set 5%- && notify-send "$(brightnessctl | grep Current)%"
+bindsym XF86MonBrightnessUp exec brightnessctl -c backlight set +5% && notify-send "Brightness $(brightnessctl | grep -P -o '(\d+%)')" -t 300
+bindsym XF86MonBrightnessDown exec brightnessctl -c backlight set 5%- && notify-send "Brightness $(brightnessctl | grep -P -o '(\d+%)')" -t 300
 
 # change focus
-bindsym $mod+j focus left
-bindsym $mod+k focus down
-bindsym $mod+l focus up
-bindsym $mod+semicolon focus right
+#bindsym $mod+j focus left
+#bindsym $mod+k focus down
+#bindsym $mod+l focus up
+#bindsym $mod+semicolon focus right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
@@ -215,10 +210,10 @@ bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
 # move focused window
-bindsym $mod+Shift+j move left
-bindsym $mod+Shift+k move down
-bindsym $mod+Shift+b move up
-bindsym $mod+Shift+o move right
+#bindsym $mod+Shift+j move left
+#bindsym $mod+Shift+k move down
+#bindsym $mod+Shift+b move up
+#bindsym $mod+Shift+o move right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Shift+Left move left
@@ -339,11 +334,10 @@ for_window [class=(?i)firefox] focus
 # For modifications, it can be copied to ~/.config/picom/picom.conf or ~/.config/picom.conf
 #
 # using default config 
-exec_always --no-startup-id picom -b
+#exec_always --no-startup-id picom -b
 #
 # for custom config:
-#exec_always --no-startup-id picom --config  ~/.config/picom.conf
-
+exec_always --no-startup-id picom --config  ~/.config/picom.conf
 #############################################
 # autostart applications/services on login: #
 #############################################
@@ -373,11 +367,13 @@ exec --no-startup-id dex --autostart --environment i3
 
 # start a script to setup displays
 # uncomment the next line, use arandr to setup displays and save the file as monitor:
-exec --no-startup-id ~/.screenlayout/monitor.sh
+# exec --no-startup-id ~/.screenlayout/monitor.sh
 
 # set wallpaper
-exec --no-startup-id sleep 2 && nitrogen --restore
+#exec --no-startup-id sleep 2 && nitrogen --restore
 #exec --no-startup-id feh --bg-fill /usr/share/endeavouros/backgrounds/endeavouros_i3.png
+exec --no-startup-id sleep 2 && ~/.config/i3/scripts/./bg.sh ~/.config/i3/backgrounds/metro_rain.gif
+
 
 # set powersavings for display:
 exec --no-startup-id xset s 480 dpms 600 600 600
@@ -417,7 +413,7 @@ exec --no-startup-id dbus-launch dunst --config ~/.config/dunst/dunstrc
 
 # start blueberry app for managing bluetooth devices from tray:
 exec --no-startup-id blueberry-tray
-exec --no-startup-id sleep 2 && /home/nathana/.config/i3/scripts/./tray.sh
+#exec --no-startup-id sleep 2 && /home/nathana/.config/i3/scripts/tray.sh
 # networkmanager-applet
 #exec --no-startup-id nm-applet
 
@@ -441,6 +437,9 @@ for_window [class="Blueberry.py" instance="blueberry.py"] floating enable
 for_window [class="Bluetooth-sendto" instance="bluetooth-sendto"] floating enable
 for_window [class="Pamac-manager"] floating enable
 for_window [window_role="About"] floating enable
+for_window [instance="Godot_Engine"] floating enable
+for_window [instance="Godot_Editor"] floating disable
+for_window [class="Pamac-manager"] floating enable
 
 # set border of floating window
 for_window [class="urxvt"] border pixel 1
@@ -464,17 +463,18 @@ set $urgentred		#e53935
 set $white		#ffffff
 set $black		#000000
 set $purple		#e345ff
-set $darkgrey		#383c4a
+set $darkgrey	#2B2E4D
 set $grey		#b0b5bd
 set $mediumgrey		#8b8b8b
 set $yellowbrown	#e1b700
+set $lightgreen		#a2c6b0
 
 # define colors for windows:
 #class		        	border		bground		text		indicator	child_border
-client.focused		    $lightblue	$darkblue	$white		$purple		$mediumgrey
-client.unfocused	    $darkblue	$darkblue	$grey		$purple		$darkgrey
-client.focused_inactive	$darkblue	$darkblue	$grey		$purple		$black
-client.urgent		    $urgentred	$urgentred	$white		$purple		$yellowbrown
+client.focused		    $lightblue	$darkblue	$white		$darkblue	$mediumgrey
+client.unfocused	    $darkblue	$darkblue	$grey		$darkblue	$darkgrey
+client.focused_inactive	$darkblue	$darkblue	$grey		$darkblue	$black
+client.urgent		    $urgentred	$urgentred	$white		$darkblue	$yellowbrown
 
 ############################################
 # bar settings (input comes from i3blocks) #
@@ -483,9 +483,9 @@ client.urgent		    $urgentred	$urgentred	$white		$purple		$yellowbrown
 # Start i3bar to display a workspace bar
 # (plus the system information i3status finds out, if available)
 bar {
-	font pango: Noto Sans Regular 10
+	font pango: Clear Sans 12
 	status_command i3blocks -c ~/.config/i3/i3blocks.conf
-	position bottom
+	position top
 #	    	i3bar_command i3bar --transparency
 # it could be that you have no primary display set: set one (xrandr --output <output> --primary)
 # reference: https://i3wm.org/docs/userguide.html#_tray_output
@@ -503,7 +503,7 @@ bar {
 		background         $darkgrey
 		statusline         $white
 #                          	border 		 		bg			txt			indicator
-		focused_workspace	$mediumgrey	   		$grey		$darkgrey	$purple
+		focused_workspace	$mediumgrey	   		$lightgreen	$darkgrey	$purple
 		active_workspace	$lightblue      	$mediumgrey	$darkgrey	$purple
 		inactive_workspace	$darkgrey   		$darkgrey	$grey		$purple
 		urgent_workspace	$urgentred	    	$urgentred	$white		$purple
