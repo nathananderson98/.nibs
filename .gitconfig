@@ -1,0 +1,7 @@
+[user]
+	email = nathananderson98@gmail.com
+	name = Nathan Anderson
+[init]
+	defaultBranch = main
+[safe]
+	directory = /home/nathana/neighbor/react-frontend
