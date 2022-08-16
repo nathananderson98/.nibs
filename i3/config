@@ -372,7 +372,7 @@ exec --no-startup-id dex --autostart --environment i3
 # set wallpaper
 #exec --no-startup-id sleep 2 && nitrogen --restore
 #exec --no-startup-id feh --bg-fill /usr/share/endeavouros/backgrounds/endeavouros_i3.png
-exec --no-startup-id sleep 2 && ~/.config/i3/scripts/./bg.sh ~/.config/i3/backgrounds/metro_rain.gif
+exec_always --no-startup-id sleep 2 && ~/.config/i3/scripts/./bg.sh ~/.config/i3/backgrounds
 
 
 # set powersavings for display:
